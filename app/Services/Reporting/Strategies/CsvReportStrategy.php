@@ -10,15 +10,25 @@ class CsvReportStrategy implements ReportStrategy
     {
         $handle = fopen('php://temp', 'r+');
 
+        // Encabezados
         fputcsv($handle, ['ID', 'Monto', 'Estado']);
 
+        $total = 0;
+
+        // Iteración de datos
         foreach ($data['items'] ?? [] as $item) {
+            $monto = $item['monto'] ?? 0;
+            $total += $monto;
+
             fputcsv($handle, [
                 $item['id'] ?? 'N/A',
-                $item['monto'] ?? 0,
+                $monto,
                 $item['estado'] ?? 'N/A'
             ]);
         }
+
+        // Inyección de los totales exactos
+        fputcsv($handle, ['-', 'Total', $total]);
 
         rewind($handle);
         $csvContent = stream_get_contents($handle);
