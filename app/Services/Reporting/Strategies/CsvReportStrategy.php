@@ -11,7 +11,7 @@ class CsvReportStrategy implements ReportStrategy
         $handle = fopen('php://temp', 'r+');
 
         // Encabezados
-        fputcsv($handle, ['ID', 'Monto', 'Estado']);
+        fputcsv($handle, ['ID Ref', 'Detalle Operativo', 'Monto', 'Estado']);
 
         $total = 0;
 
@@ -20,15 +20,23 @@ class CsvReportStrategy implements ReportStrategy
             $monto = $item['monto'] ?? 0;
             $total += $monto;
 
+            $rawEst = $item['estado'] ?? '';
+            $estNormalizado = strtolower(trim($rawEst));
+            
+            $estFinal = in_array($estNormalizado, ['aprobado', 'pendiente', 'rechazado']) 
+                ? ucfirst($estNormalizado) 
+                : 'No clasificado';
+
             fputcsv($handle, [
                 $item['id'] ?? 'N/A',
+                $item['detalle'] ?? 'Sin detalle registrado',
                 $monto,
-                $item['estado'] ?? 'N/A'
+                $estFinal
             ]);
         }
 
         // Inyección de los totales exactos
-        fputcsv($handle, ['-', 'Total', $total]);
+        fputcsv($handle, ['-', 'Total Acumulado', $total, '-']);
 
         rewind($handle);
         $csvContent = stream_get_contents($handle);
