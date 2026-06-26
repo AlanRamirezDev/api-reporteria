@@ -9,3 +9,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('/reportes/generar', [ReportController::class, 'generate']);
+
+// Endpoint Activar Servidor
+Route::get('/ping', function () {
+    return response()->json(['status' => 'online', 'message' => 'Servidor Activo']);
+});
