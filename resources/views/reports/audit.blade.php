@@ -129,7 +129,7 @@
                 <div class="brand-subtitle">Visualización de Movimientos Transaccionales</div>
             </td>
             <td class="meta-text">
-                <strong>Fecha Emisión:</strong> {{ now()->timezone('America/Mexico_City')->format('d/m/Y H:i:s') }}<br>
+                <strong>Fecha Emisión:</strong> {{ now()->timezone(request()->input('timezone', 'UTC'))->format('d/m/Y H:i:s') }}<br>
                 <strong>ID Reporte:</strong> RPT-{{ time() }}<br>
                 <strong>Estado:</strong> Consolidado
             </td>
